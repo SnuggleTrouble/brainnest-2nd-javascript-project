@@ -79,7 +79,7 @@ body {
 
 .operator,
 .equal,
-.clear {
+.clear-display {
   color: rgb(249, 250, 248);
   background: linear-gradient(
     to bottom,
@@ -90,7 +90,7 @@ body {
 
 .operator:hover,
 .equal:hover,
-.clear:hover {
+.clear-display:hover {
   background: rgb(255, 184, 84);
 }
 
