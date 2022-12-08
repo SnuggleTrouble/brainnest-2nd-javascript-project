@@ -1,59 +1,104 @@
-let previousDisplayValue = "";
-let currentDisplayValue = "";
-let operatorSelection = "";
+let previousEntry = "";
+let currentEntry = "";
+let operatorEntry = "";
 
-document.addEventListener("DOMContentLoaded", function () {
-  let previousEntry = document.querySelector(".previous-entry");
-  let currentEntry = document.querySelector(".current-entry");
+let previousDisplayEntry = document.querySelector(".previous-entry");
+let currentDisplayEntry = document.querySelector(".current-entry");
 
-  const clear = document.querySelector(".clear");
-  const equal = document.querySelector(".equal");
-  const decimal = document.querySelector(".decimal");
+const clearDisplay = document.querySelector(".clear-display");
+const backspace = document.querySelector(".backspace");
+const equal = document.querySelector(".equal");
+const decimal = document.querySelector(".decimal");
 
-  const operators = document.querySelectorAll(".operator");
-  const numbers = document.querySelectorAll(".number");
+const operators = document.querySelectorAll(".operator");
+const numbers = document.querySelectorAll(".number");
 
-  clear.addEventListener("click", function (event) {
-    clearEntry(event.target.textContent);
-  });
-
-  equal.addEventListener("click", function (event) {
-    calculate(event.target.textContent);
-  });
-
-  decimal.addEventListener("click", function (event) {
-    addDecimal(event.target.textContent);
-  });
-
-  operators.forEach((operator) =>
-    operator.addEventListener("click", function (event) {
-      handleOperator(event.target.textContent);
-    })
-  );
-
-  numbers.forEach((number) =>
-    number.addEventListener("click", function (event) {
-      handleNumber(event.target.textContent);
-    })
-  );
+clearDisplay.addEventListener("click", function () {
+  previousEntry = "";
+  currentEntry = "";
+  operatorEntry = "";
+  previousDisplayEntry.textContent = previousEntry;
+  currentDisplayEntry.textContent = currentEntry;
 });
 
-function clearEntry(clear) {
-  console.log(clear);
+backspace.addEventListener("click", function () {
+  handleDelete();
+});
+
+equal.addEventListener("click", function () {
+  if (previousEntry != "" && currentEntry != "") {
+    operate();
+    previousDisplayEntry.textContent = "";
+    if (previousEntry.length <= 13) {
+      currentDisplayEntry.textContent = previousEntry;
+    } else {
+      currentDisplayEntry.textContent = `${previousEntry.slice(0, 13)}...`;
+    }
+  }
+});
+
+decimal.addEventListener("click", function () {
+  addDecimal();
+});
+
+operators.forEach((operator) =>
+  operator.addEventListener("click", function (event) {
+    handleOperator(event.target.textContent);
+    previousDisplayEntry.textContent = `${previousEntry} ${operatorEntry}`;
+    currentDisplayEntry.textContent = currentEntry;
+  })
+);
+
+numbers.forEach((number) =>
+  number.addEventListener("click", function (event) {
+    handleNumber(event.target.textContent);
+    currentDisplayEntry.textContent = currentEntry;
+  })
+);
+
+function updateDisplay() {
+  currentDisplayEntry.textContent = currentEntry;
 }
 
-function calculate(equal) {
-  console.log(equal);
+function handleDelete() {
+  currentEntry = currentEntry.toString().slice(0, -1);
 }
 
-function addDecimal(decimal) {
-  console.log(decimal);
+function addDecimal() {
+  if (!currentEntry.includes(".")) {
+    currentEntry += ".";
+  }
 }
 
 function handleOperator(operator) {
-  console.log(operator);
+  if (currentEntry === "") return;
+  operatorEntry = operator;
+  previousEntry = currentEntry;
+  currentEntry = "";
 }
 
 function handleNumber(number) {
-  console.log(number);
+  if (currentEntry.length < 13) {
+    currentEntry = currentEntry.toString() + number.toString();
+  }
+}
+function handleRounding(number) {
+  return Math.round(number * 100000) / 100000;
+}
+
+function operate() {
+  previousEntry = Number(previousEntry);
+  currentEntry = Number(currentEntry);
+  if (operatorEntry === "+") {
+    previousEntry += currentEntry;
+  } else if (operatorEntry === "-") {
+    previousEntry -= currentEntry;
+  } else if (operatorEntry === "x") {
+    previousEntry *= currentEntry;
+  } else if (operatorEntry === "/") {
+    previousEntry /= currentEntry;
+  }
+  previousEntry = handleRounding(previousEntry);
+  previousEntry = previousEntry.toString();
+  currentEntry = previousEntry.toString();
 }
