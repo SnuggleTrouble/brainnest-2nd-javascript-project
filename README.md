@@ -3,7 +3,7 @@ This is the 2nd javascript project at Brainnest.
 This is a calculator with simple functionalities.
 
 ## Requirements
-- The calculator will be made with HTML, CSS and JavaScript, and DOM manipulation.
+- The calculator is made with HTML, CSS and JavaScript; using DOM manipulation.
 - The calculator should have an **equals** and **clear** key.
 - The calculator should contain functions for the basic math operators.
     Add, Subtract, Multiply and Divide.
