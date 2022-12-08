@@ -40,7 +40,7 @@ body {
   align-items: flex-end;
   justify-content: flex-end;
   flex-direction: column;
-  width: 275px;
+  width: 375px;
   height: 75px;
   margin: 10px;
   border-radius: 5px;
@@ -72,6 +72,11 @@ body {
   color: rgb(36, 36, 36);
 }
 
+.clear-display,
+.equal {
+  width: 175px;
+}
+
 .number:hover,
 .decimal:hover {
   background: rgb(226, 226, 226);
@@ -79,7 +84,8 @@ body {
 
 .operator,
 .equal,
-.clear-display {
+.clear-display,
+.backspace {
   color: rgb(249, 250, 248);
   background: linear-gradient(
     to bottom,
@@ -90,7 +96,8 @@ body {
 
 .operator:hover,
 .equal:hover,
-.clear-display:hover {
+.clear-display:hover,
+.backspace:hover {
   background: rgb(255, 184, 84);
 }
 
