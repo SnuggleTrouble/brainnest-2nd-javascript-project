@@ -5,6 +5,8 @@ let operatorEntry = "";
 let previousDisplayEntry = document.querySelector(".previous-entry");
 let currentDisplayEntry = document.querySelector(".current-entry");
 
+window.addEventListener("keydown", handleKeyPress);
+
 const clearDisplay = document.querySelector(".clear-display");
 const backspace = document.querySelector(".backspace");
 const equal = document.querySelector(".equal");
@@ -23,6 +25,7 @@ clearDisplay.addEventListener("click", function () {
 
 backspace.addEventListener("click", function () {
   handleDelete();
+  updateDisplay();
 });
 
 equal.addEventListener("click", function () {
@@ -32,8 +35,11 @@ equal.addEventListener("click", function () {
     if (previousEntry.length <= 13) {
       currentDisplayEntry.textContent = previousEntry;
     } else {
-      currentDisplayEntry.textContent = `${previousEntry.slice(0, 13)}...`;
+      currentDisplayEntry.textContent = `${previousEntry
+        .toString()
+        .slice(0, 13)}...`;
     }
+    updateDisplay();
   }
 });
 
@@ -52,26 +58,34 @@ operators.forEach((operator) =>
 numbers.forEach((number) =>
   number.addEventListener("click", function (event) {
     handleNumber(event.target.textContent);
-    currentDisplayEntry.textContent = currentEntry;
+    updateDisplay();
   })
 );
 
 function updateDisplay() {
   currentDisplayEntry.textContent = currentEntry;
+  if (operatorEntry != null) {
+    previousDisplayEntry.textContent = `${previousEntry} ${operatorEntry}`;
+  }
 }
 
 function handleDelete() {
   currentEntry = currentEntry.toString().slice(0, -1);
+  updateDisplay();
 }
 
 function addDecimal() {
   if (!currentEntry.includes(".")) {
     currentEntry += ".";
   }
+  updateDisplay();
 }
 
 function handleOperator(operator) {
   if (currentEntry === "") return;
+  if (previousEntry !== "") {
+    operate();
+  }
   operatorEntry = operator;
   previousEntry = currentEntry;
   currentEntry = "";
@@ -82,23 +96,73 @@ function handleNumber(number) {
     currentEntry = currentEntry.toString() + number.toString();
   }
 }
+
 function handleRounding(number) {
   return Math.round(number * 100000) / 100000;
 }
 
+function add(num1, num2) {
+  return num1 + num2;
+}
+function subtract(num1, num2) {
+  return num1 - num2;
+}
+function multiply(num1, num2) {
+  return num1 * num2;
+}
+function divide(num1, num2) {
+  return num1 / num2;
+}
+
 function operate() {
-  previousEntry = Number(previousEntry);
-  currentEntry = Number(currentEntry);
-  if (operatorEntry === "+") {
-    previousEntry += currentEntry;
-  } else if (operatorEntry === "-") {
-    previousEntry -= currentEntry;
-  } else if (operatorEntry === "x") {
-    previousEntry *= currentEntry;
-  } else if (operatorEntry === "/") {
-    previousEntry /= currentEntry;
+  let result;
+  previousEntry = parseFloat(previousEntry);
+  currentEntry = parseFloat(currentEntry);
+  if (isNaN(previousEntry) || isNaN(currentEntry)) return;
+  switch (operatorEntry) {
+    case "+":
+      result = add(previousEntry, currentEntry);
+      break;
+    case "-":
+      result = subtract(previousEntry, currentEntry);
+      break;
+    case "x":
+      result = multiply(previousEntry, currentEntry);
+      break;
+    case "÷":
+      result = divide(previousEntry, currentEntry);
+      break;
+    default:
+      return;
   }
-  previousEntry = handleRounding(previousEntry);
-  previousEntry = previousEntry.toString();
-  currentEntry = previousEntry.toString();
+  result = handleRounding(result);
+  currentEntry = result;
+  operatorEntry = undefined;
+  previousEntry = "";
+}
+
+function handleKeyPress(event) {
+  event.preventDefault();
+  if (event.key >= 0 && event.key <= 9) {
+    handleNumber(event.key);
+  }
+  if (
+    event.key === "Enter" ||
+    (event.key === "=" && previousEntry != "" && currentEntry != "")
+  ) {
+    operate();
+  }
+  if (event.key === "+" || event.key === "-" || event.key === "/") {
+    handleOperator(event.key);
+  }
+  if (event.key === "*" || event.key === "x") {
+    handleOperator("x");
+  }
+  if (event.key === ".") {
+    addDecimal();
+  }
+  if (event.key === "Backspace") {
+    handleDelete();
+  }
+  updateDisplay();
 }
