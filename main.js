@@ -94,6 +94,12 @@ function operate() {
       break;
     case "÷":
     case "/":
+      if (currentEntry === 0) {
+        operatorEntry = "";
+        previousEntry = "";
+        currentEntry = "To infinity & Beyond!";
+        return;
+      }
       result = divide(previousEntry, currentEntry);
       break;
     default:
@@ -166,7 +172,6 @@ function handleKeyPress(event) {
   }
   if (event.key === "Backspace") {
     handleDelete();
-    5;
   }
   updateDisplay();
 }
