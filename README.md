@@ -2,6 +2,8 @@
 This is the 2nd javascript project at Brainnest.
 This is a calculator with simple functionalities.
 
+https://snuggletrouble.github.io/brainnest-2nd-javascript-project/
+
 ## Requirements
 - The calculator is made with HTML, CSS and JavaScript; using DOM manipulation.
 - The calculator should have an **equals** and **clear** key.
