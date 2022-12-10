@@ -13,3 +13,7 @@ https://snuggletrouble.github.io/brainnest-2nd-javascript-project/
 - The user should be able to string together several operations and get the right answer, with each pair of numbers being evaluated at a time. For example, 12 + 7 - 5 * 3 = should yield 42.
 - The calculator should not evaluate more than a single pair of numbers at a time.
 - Numbers with long decimals should be rounded to not overflow the screen.
+
+## Known Bugs
+- Users can enter multiple zeroes. "Example: 0000".
+- Changing operator after one is chosen not possible.
